@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script>window.location.href='index.html'</script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Background Image Example</title>
+        <style>
+            @font-face{font-display:swap;font-family:tf2pro;src:url(tf2professor.ttf)}
+            .tf2pro{font-family:tf2pro; font-size: 80px; line-height: 0.8;}
+            body {
+                background-image: url('spy.jpg');
+                background-size: auto 110%;
+                background-repeat: no-repeat;
+                background-color: black;
+                font-weight: bold;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh; /* Ensures the body takes up the full viewport height */
+            }
+            .outlined-text {
+                color: white; /* Text color */
+                text-shadow: 
+                -1px -1px 0 #000,  
+                1px -1px 0 #000,
+                -1px  1px 0 #000,
+                1px  1px 0 #000; /* Black outline */
+                text-align: center;
+            }
+            .content {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="content">
+            <p class="tf2pro outlined-text">That internet users a Spy!</br> Enable Javascript.</p>
+        </div>
+    </body>
+</html>
