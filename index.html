@@ -120,6 +120,7 @@
             justify-content: space-around;
             align-items: center;
             width: 100%;
+            height: 90px;
         }
         #title{
             height: 70px;
@@ -159,11 +160,11 @@
         }
         footer{
             background-color: #b85926;
-            height: 70px;
+            height: 90px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 60px;
+            margin-top: 90px;
             width: 100%;
         }
     </style>
@@ -177,7 +178,7 @@
     <p class="tf2pro"><span draggable="false">The collaberation of many made this </span><a href='https://github.com/Hypnootize/TF2-HUDs-Archive/tree/master' rel='noopener noreferrer me' target='_blank'><span draggable='false'>list</span></a><span draggable="false"> possible.</br>You can find all known current and past huds here.</br></span></p>
     <div id="markdown-content1" draggable="false"></div>
     <div id="markdown-content2"></div>
-    <p class="tf2bld" draggable="false">Archive HUDs</p>
+    <p class="tf2bld" draggable="false">HUD Archive</p>
     <div id="markdown-content3" draggable="false"></div>
     <div id="markdown-content4"></div>
     <footer class="slow">
@@ -260,7 +261,14 @@
                 // Add table row
                 html += '<tr>';
                 cells.forEach(cell => {
-                    html += `<td>${cell}</td>`;
+                    // Check if the cell contains an anchor tag
+                    if (cell.startsWith('<a ') && cell.endsWith('</a>')) {
+                        // Append rel and target attributes to the anchor tag
+                        const anchorTag = cell.replace(/(<a\s+)(.*?href="([^"]+)".*?>)/, '$1 rel="noopener noreferrer me" target="_blank"$2');
+                        html += `<td>${anchorTag}</td>`;
+                    } else {
+                        html += `<td>${cell}</td>`;
+                    }
                 });
                 // Fill remaining columns if there are fewer cells than headers
                 const numEmptyCells = headers.length - cells.length;
@@ -362,7 +370,14 @@
                 // Add table row
                 html += '<tr>';
                 cells.forEach(cell => {
-                    html += `<td>${cell}</td>`;
+                    // Check if the cell contains an anchor tag
+                    if (cell.startsWith('<a ') && cell.endsWith('</a>')) {
+                        // Append rel and target attributes to the anchor tag
+                        const anchorTag = cell.replace(/(<a\s+)(.*?href="([^"]+)".*?>)/, '$1 rel="noopener noreferrer me" target="_blank"$2');
+                        html += `<td>${anchorTag}</td>`;
+                    } else {
+                        html += `<td>${cell}</td>`;
+                    }
                 });
                 // Fill remaining columns if there are fewer cells than headers
                 const numEmptyCells = headers.length - cells.length;
