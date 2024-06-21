@@ -181,8 +181,8 @@
     <p class="tf2bld" draggable="false">HUD Archive</p>
     <div id="markdown-content3" draggable="false"></div>
     <div id="markdown-content4"></div>
-    <footer class="slow">
-        <a href='they_dont_know.jpg' rel='noopener noreferrer me' target='_blank'><span draggable='false'>important meme</span></a>
+    <footer class="slow" onclick="smoothScrollToTop()">
+        <p draggable="false" class="tf2pro">Click to scroll to the top of the page</p>
     </footer>
     <!-- GITHUB 1 -->
     <script>
@@ -392,6 +392,12 @@
         };
     // Fetch and render Markdown on page load
     fetchAndRenderMarkdown4();
+    </script>
+    <!-- SCROLL TO TOP -->
+    <script>
+      function smoothScrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     </script>
 </body>
 </html>
