@@ -67,11 +67,29 @@
     </script>
     <!-- STYLE -->
     <style>
+        /* ANIMATIONS */
+        @media (prefers-reduced-motion: no-preference){
+            @keyframes fade-up{
+                0% {opacity: 0}
+                100% {opacity: 1}
+            }
+            @keyframes fade-down{
+                0% {opacity: 0; transform: translateY(-40px) scale(0.8);}
+                100% {opacity: 1; transform: translateY(0px) scale(1);}
+            }
+            @keyframes moveUpDown {
+                0%, 100% {transform: translateY(0) scale(1)}
+                50% {transform: translateY(-1px) scale(1.05)}
+            }
+            .fade-up{animation: fade-up 3.0s}
+            .fade-down{animation: fade-down 1.0s}
+            .pulse{animation: moveUpDown 7s infinite}
+        }
         /* FONT */
         @font-face{font-display:swap;font-family:tf2bld;src:url(tf2build.ttf)}
         @font-face{font-display:swap;font-family:tf2pro;src:url(tf2professor.ttf)}
-        .tf2bld{font-family:tf2bld; font-size: 60px; line-height: 0.8;}
-        .tf2pro{font-family:tf2pro; font-size: 60px; line-height: 0.8;}
+        .tf2bld{font-family:tf2bld; font-size: 60px; line-height: 0.8}
+        .tf2pro{font-family:tf2pro; font-size: 60px; line-height: 0.8;margin: 0;padding-bottom: 20px;}
         /* REMOVE DRAG, HIGHLIGHT, & POINTER */
         [draggable=false]{
             user-select:none;/* Chrome & Opera */
@@ -94,14 +112,17 @@
         /* VARIABLES */
         :root{
             --bg1: #ccccccc5;
+            --bg2: #c4c4c4;
             --tx1: #1c1e21;
         }
         .dark{
             --bg1: #212121;
+            --bg2: #292929;
             --tx1: #FFFFFF;
         }
         /* REGULAR CSS */
         body{
+            min-height: 100vh;
             margin: 0;
             padding: 0;
             background-color: var(--bg1);
@@ -110,7 +131,6 @@
             line-height: 1.6;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
         }
         header{
@@ -122,7 +142,7 @@
             width: 100%;
             height: 90px;
         }
-        #title{
+        #logo{
             height: 70px;
         }
         #toggle{
@@ -135,22 +155,44 @@
             background-color: #b85926;
             border: 0;
         }
-        #markdown-content1, #markdown-content2, #markdown-content3, #markdown-content4
-        {
+        #pageSelector{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            padding-top: 10px;
+            padding-bottom: 40px;
+            gap: 20px;
+        }
+        #pageSelector div{
+            cursor: pointer;
+        }
+        #markdown-content1, #markdown-content2, #markdown-content3, #markdown-content4{
+            width:925px
+        }
+        #markdown-content5 td{
             width:925px
         }
         #markdown-content1 table, #markdown-content3 table{
             width: 925px;
         }
-        table 
-        {
+        #markdown-content2, #markdown-content4, #markdown-content5{
+            margin-bottom: 75px;
+        }
+        .centerdiv{
+            display: flex;
+            justify-content: center;
+        }
+        .divbottom{
+            margin-bottom: 25px;
+        }
+        table{
             border-collapse: collapse;
             table-layout: fixed;
             color: var(--tx1);
             font-style: italic;
         }
-        th, td 
-        {
+        th, td{
             border: 1px solid var(--tx1);
             padding: 8px;
             text-align: center;
@@ -158,32 +200,119 @@
             transition-duration: 1000ms;
             transition-timing-function: ease;
         }
+        #scrollUpButton{
+            position: fixed;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 50px;
+            background-color: var(--bg2);
+            border-radius: 50%;
+            height: 55px;
+            width: 55px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #scrollUpButton.show{
+            opacity: 1;
+        }
+        #uparrow{
+            height: 45px;
+            width: 45px;
+        }   
+        .uparrow path {
+            fill: var(--tx1);
+        }
         footer{
             background-color: #b85926;
             height: 90px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 90px;
+            margin-top: auto;
             width: 100%;
         }
     </style>
 </head>
 <body class="slow">
+    <!-- HEADER -->
     <header class="slow">
-        <img draggable="false" id="title" src="logo.png" alt=""/>
-        <button id="toggle" class="slow"></button>
+        <img draggable="false" id="logo" src="logo.png" class="fade-down" alt=""/>
+        <button id="toggle" class="slow fade-down"></button>
     </header>
+    <!-- TITLE -->
     <p class="tf2bld" draggable="false">Every Hud in one place</p>
-    <p class="tf2pro"><span draggable="false">The collaboration of many made this </span><a href='https://github.com/Hypnootize/TF2-HUDs-Archive/tree/master' rel='noopener noreferrer me' target='_blank'><span draggable='false'>list</span></a><span draggable="false"> possible.</br>You can find all known current and past huds here.</br></span></p>
-    <div id="markdown-content1" draggable="false"></div>
-    <div id="markdown-content2"></div>
-    <p class="tf2bld" draggable="false">HUD Archive</p>
-    <div id="markdown-content3" draggable="false"></div>
-    <div id="markdown-content4"></div>
-    <footer class="slow" onclick="smoothScrollToTop()">
-        <p draggable="false" class="tf2pro">click to scroll to the top of the page</p>
+    <!-- TEXT -->
+    <p class="tf2pro" id="text">
+        <span draggable="false">the collaboration of many made this </span><a href='https://github.com/Hypnootize/TF2-HUDs-Archive/tree/master' rel='noopener noreferrer me' target='_blank'><span draggable='false'>list</span></a><span draggable="false"> possible.</br>you can find all known current and past huds here.</br></span></p>
+    <p class="tf2pro pulse" draggable="false">click to switch the page</p>
+    <!-- PAGE SELECTOR -->
+    <div id="pageSelector">
+        <div id="updated"><img draggable="false" src="icons/updated.png" alt=""></div>
+        <div id="resources"><img draggable="false" src="icons/resources.png" alt=""></div>
+        <div id="outdated"><img draggable="false" src="icons/outdated.png" alt=""></div>
+    </div>
+    <!-- PAGE UPDATED -->
+    <div id="updated-content" class="content-section">
+        <div id="markdown-content1" draggable="false"></div>
+        <div id="markdown-content2"></div>
+    </div>
+    <!-- PAGE OUTDATED -->
+    <div id="outdated-content" class="content-section" style="display: none;">
+        <div id="markdown-content3" draggable="false"></div>
+        <div id="markdown-content4"></div>
+    </div>
+    <!-- PAGE RESOURCES -->
+    <div id="resources-content" class="content-section" style="display: none;">
+        <p class="tf2pro centerdiv"><span draggable="false">website was created by: </span><a href="https://steamcommunity.com/id/dankswoops/" rel='noopener noreferrer me' target='_blank'><span draggable="false">DankSwoops</span></a></p>
+        <p class="tf2pro centerdiv divbottom"><span draggable="false">repo created & maintained by: </span><a href="https://steamcommunity.com/id/Hypnootize/" rel='noopener noreferrer me' target='_blank'><span draggable="false">Hypnootize</span></a></p>
+        <div id="markdown-content5"></div>
+    </div>
+    <!-- SCROLL UP BUTTON -->
+    <div id="scrollUpButton" onclick="smoothScrollToTop()">
+        <svg id="uparrow" class="uparrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path d="M256,5.333C114.88,5.333,0,117.76,0,256s114.88,250.667,256,250.667S512,394.24,512,256S397.12,5.333,256,5.333zM256,485.333C126.613,485.333,21.333,382.4,21.333,256S126.613,26.667,256,26.667S490.667,129.493,490.667,256S385.387,485.333,256,485.333z"/>
+            <path d="M264.32,147.947c-4.053-4.587-10.987-5.013-15.573-0.96c-0.32,0.32-0.64,0.64-0.96,0.96L109.12,318.613c-3.733,4.587-2.987,11.307,1.6,15.04s11.307,2.987,15.04-1.6L256,171.627l130.347,160.427c3.733,4.587,10.453,5.227,15.04,1.6c4.587-3.733,5.227-10.453,1.6-15.04L264.32,147.947z"/>
+        </svg>
+    </div>
+    <!-- FOOTER -->
+    <footer class="slow fade-up">
+        <a href='they_dont_know.jpg' rel='noopener noreferrer' target='_blank'><span draggable='false'>important meme</span></a>
     </footer>
+    <!-- PAGES VIEWER -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initial setup to show default content
+            document.getElementById('updated-content').style.display = 'block';
+            // Button click handlers to toggle content visibility
+            document.getElementById('updated').addEventListener('click', function() {
+                showContent('updated');
+            });
+            document.getElementById('resources').addEventListener('click', function() {
+                showContent('resources');
+            });
+            document.getElementById('outdated').addEventListener('click', function() {
+                showContent('outdated');
+            });
+            // Function to show specific content and hide others
+            function showContent(section) {
+                const sections = ['updated', 'resources', 'outdated'];
+                sections.forEach(function(sec) {
+                    const contentDiv = document.getElementById(sec + '-content');
+                    if (sec === section) {
+                        contentDiv.style.display = 'block';
+                    } else {
+                        contentDiv.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
     <!-- GITHUB 1 -->
     <script>
         const apiUrl1 = 'https://raw.githubusercontent.com/Hypnootize/TF2-HUDs-Archive/master/Updated%20HUDs%20List.md';
@@ -264,7 +393,7 @@
                     // Check if the cell contains an anchor tag
                     if (cell.startsWith('<a ') && cell.endsWith('</a>')) {
                         // Append rel and target attributes to the anchor tag
-                        const anchorTag = cell.replace(/(<a\s+)(.*?href="([^"]+)".*?>)/, '$1 rel="noopener noreferrer me" target="_blank"$2');
+                        const anchorTag = cell.replace(/(<a\s+)(.*?href="([^"]+)".*?>)/, '$1 rel="noopener noreferrer" target="_blank"$2');
                         html += `<td>${anchorTag}</td>`;
                     } else {
                         html += `<td>${cell}</td>`;
@@ -373,7 +502,7 @@
                     // Check if the cell contains an anchor tag
                     if (cell.startsWith('<a ') && cell.endsWith('</a>')) {
                         // Append rel and target attributes to the anchor tag
-                        const anchorTag = cell.replace(/(<a\s+)(.*?href="([^"]+)".*?>)/, '$1 rel="noopener noreferrer me" target="_blank"$2');
+                        const anchorTag = cell.replace(/(<a\s+)(.*?href="([^"]+)".*?>)/, '$1 rel="noopener noreferrer" target="_blank"$2');
                         html += `<td>${anchorTag}</td>`;
                     } else {
                         html += `<td>${cell}</td>`;
@@ -393,11 +522,74 @@
     // Fetch and render Markdown on page load
     fetchAndRenderMarkdown4();
     </script>
+    <!-- GITHUB 5 -->
+    <script>
+        const apiUrl5 = 'https://raw.githubusercontent.com/Hypnootize/TF2-HUDs-Archive/master/HUD%20Resources.md';
+        async function fetchAndRenderMarkdown5() {
+            try {
+                const response = await fetch(apiUrl5);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const markdownContent = await response.text();
+                // Convert Markdown table to HTML
+                const htmlContent = markdownToHtmlTable5(markdownContent);
+                // Display HTML content
+                document.getElementById('markdown-content5').innerHTML = htmlContent;
+            } catch (error) {
+                console.error('Error fetching or rendering content:', error);
+            }
+        };
+        function markdownToHtmlTable5(markdown) {
+            const lines = markdown.trim().split('\n');
+            // Start building HTML table
+            let html = '';
+            lines.forEach(line => {
+                if (line.includes('[') && line.includes('](')) {
+                    const cells = line.split(' * ');
+                    html += '<tr>';
+                    cells.forEach(cell => {
+                        if (cell.includes('[') && cell.includes('](')) {
+                            const match = cell.match(/\[(.*?)\]\((.*?)\)/);
+                            if (match) {
+                                const text = match[1];
+                                const link = match[2];
+                                html += `<td><a rel='noopener noreferrer' target='_blank' href="${link}">${text}</a></td>`;
+                            } else {
+                                html += `<td>${cell}</td>`;
+                            }
+                        } else {
+                            html += `<td>${cell}</td>`;
+                        }   
+                    });
+                    html += '</tr>';
+                }
+            });
+            if (html) {
+                html = '<table>' + html + '</table>';
+            }
+            return html;
+        }
+    // Fetch and render Markdown on page load
+    fetchAndRenderMarkdown5();
+    </script>
     <!-- SCROLL TO TOP -->
     <script>
-      function smoothScrollToTop() {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+        // Function to smooth scroll to the top
+        function smoothScrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        // Function to toggle visibility of scroll up button
+        function toggleScrollUpButton() {
+            var scrollUpButton = document.getElementById('scrollUpButton');
+            if (window.scrollY > 400) {
+                scrollUpButton.classList.add('show');
+            } else {
+                scrollUpButton.classList.remove('show');
+            }
+        }
+        // Event listener for scrolling
+        window.addEventListener('scroll', toggleScrollUpButton);
     </script>
 </body>
 </html>
